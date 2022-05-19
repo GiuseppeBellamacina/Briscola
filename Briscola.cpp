@@ -107,7 +107,6 @@ void initPartita(Carta** mazzo, Carta** gioc, Carta** avv, Carta** terra, int& n
 	distribuisci(mazzo,gioc,n1,n2);
 	distribuisci(mazzo,avv,n1,n2);
 	setBriscola(mazzo);
-	mostra(gioc);
 	lancio(avv,terra,rand()%3);
 }
 
@@ -136,14 +135,15 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 	else cout << terra[0];
 	if(turno){
 		if(vuoto){
-			cout << "\nScegli la carta da lanciare (0) (1) (2)";
+			cout << "\nScegli la carta da lanciare (0) (1) (2)\t";
 			cin >> z;
 			vuoto = false;
 			turno = false;
+			terra[0] = gioc[z];
 			return true;
 		}
 		else{
-			cout << "\nScegli la carta da lanciare (0) (1) (2)";
+			cout << "\nScegli la carta da lanciare (0) (1) (2)\t";
 			cin >> z;
 			if(match(gioc,terra,z)!=-1){
 				g+=match(avv,terra,z);
@@ -162,9 +162,9 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 	else{
 		q = rand()%3;
 		if(vuoto){
-			terra[0] = avv[q];
 			vuoto = false;
 			turno = true;
+			terra[0] = avv[q];
 			return true;
 		}
 		else{
@@ -202,7 +202,10 @@ int main(){
 	short z,q;
 	
 	initPartita(mazzo,gioc,avv,terra,index,3);
-	while(game(gioc,avv,terra,punteggioGioc,punteggioAvv,turno,vuoto,index,z,q)){
+	bool g = true;
+	while(g){
+		mostra(gioc);
+		g = game(gioc,avv,terra,punteggioGioc,punteggioAvv,turno,vuoto,index,z,q);
 		pesca(mazzo,gioc,z,index);
 		pesca(mazzo,avv,q,index);
 	};
