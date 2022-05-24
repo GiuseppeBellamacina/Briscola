@@ -35,7 +35,6 @@ class Carta{
 			os << "|_____|" << endl;
 			return os;
 		}
-		
 };
 
 ostream& operator<<(ostream& os, Carta* c){
@@ -120,14 +119,14 @@ void noCartaTerra(){
 
 void mostra(Carta** gioc, Carta** terra, bool vuoto, string br, int index, int g, int a){
 	system("cls");
-	cout << "Il seme di briscola e' " << br << "           Carte rimanenti: " << 40-index << endl;
-	cout << "_________________________" << "              Punteggio Gioc: " << g << endl;
-	cout << "Queste sono le tue carte" << "               Punteggio Avv: " << a << endl;
+	cout << "Il seme di briscola e' " << br << setw(br=="Oro" ? 22 : 20) << "MAZZO" << endl;
+	cout << "___________________________" << setw(33) << "Carte rimanenti: " << 40-index << endl;
+	cout << "Queste sono le tue carte" << "                   Punteggio Gioc: " << g << " ||| Punteggio Avv: " << a << endl;
 	for(int i=0; i<3; i++){
 		if(gioc[i]->isLanciata()) noCartaTerra();
 		else cout << gioc[i];
 	}
-	cout << "_________________________" << endl;
+	cout << "___________________________" << endl;
 	cout << "Carta a terra" << endl;
 	if(vuoto) noCartaTerra();
 	else cout << terra[0];
@@ -150,16 +149,37 @@ string initPartita(Carta** mazzo, Carta** gioc, Carta** avv, Carta** terra, int&
 int match(Carta** vec, Carta** terra, int i){
 	int ret = vec[i]->getPunteggio()+terra[0]->getPunteggio();
 	if(terra[0]->getBriscola()){
-		if(vec[i]->getBriscola()) return vec[i]->getPunteggio()>terra[0]->getPunteggio() ? ret : -ret;
+		if(vec[i]->getBriscola()){
+			if(vec[i]->getPunteggio()==0 && terra[0]->getPunteggio()==0)
+				return vec[i]->getValore()>terra[0]->getValore() ? ret : -ret;
+			return vec[i]->getPunteggio()>terra[0]->getPunteggio() ? ret : -ret;
+		}
 		else return -ret;
 	}
 	else{
 		if(vec[i]->getBriscola()) return ret;
 		else{
-			if(vec[i]->getSeme()==terra[0]->getSeme()) return vec[i]->getPunteggio()>terra[0]->getPunteggio() ? ret : -ret;
+			if(vec[i]->getSeme()==terra[0]->getSeme()){
+				if(vec[i]->getPunteggio()==0 && terra[0]->getPunteggio()==0)
+					return vec[i]->getValore()>terra[0]->getValore() ? ret : -ret;
+				return vec[i]->getPunteggio()>terra[0]->getPunteggio() ? ret : -ret;
+			}
 			else return -ret;
 		}
 	}
+}
+
+void occhiata(Carta** avv){
+	system("cls");
+	cout << "Minchia mbare, belle carte..." << endl;
+	cout << "___________________________" << endl;
+	cout << "Queste NON sono le tue carte" << endl;
+	for(int i=0; i<3; i++){
+		if(avv[i]->isLanciata()) noCartaTerra();
+		else cout << avv[i];
+	}
+	cout << endl;
+	system("pause");
 }
 
 // gioc sono le carte del giocatore
@@ -172,18 +192,22 @@ int match(Carta** vec, Carta** terra, int i){
 // index è l'indice del mazzo
 // z è l'indice della carta scelta dal giocatore
 // q è l'indice della carta scelta dall'avversario
+// br è la briscola
 
 bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno, bool& vuoto, int& index, short& z, short& q, string br){
 	mostra(gioc,terra,vuoto,br,index,g,a);
 	// comincio io
 	if(turno){
-		cout << endl << "Scegli la carta da lanciare (1) (2) (3)\t";
+		cout << endl << "Scegli la carta da lanciare (1) (2) (3) --> ";
 		cin >> z;
+		if(z==1234){
+			occhiata(avv);
+			mostra(gioc,terra,vuoto,br,index,g,a);
+		}
 		while(cin.fail() || z>3 || z<1 || gioc[z-1]->isLanciata()){
-			cerr << endl << "Scrivi (1), (2) o (3)" << endl;
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << endl << "Scegli la carta da lanciare (1) (2) (3)\t";
+			cout << endl << "Scegli la carta da lanciare (1) (2) (3) --> ";
 			cin >> z;
 		}
 		z--;
@@ -195,7 +219,12 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 		q = rand()%3;
 		mostra(gioc,terra,vuoto,br,index,g,a);
 		while(avv[q]->isLanciata()) q = rand()%3;
-		cout << endl << "Il tuo avversario sta per lanciare " << avv[q]->name() << (avv[q]->getSeme()=="Oro" ? " d'" : " di ") << avv[q]->getSeme() << endl;
+		if(avv[q]->getPunteggio()==0){
+			cout << "Il tuo avversario ci va di liscio con " << avv[q]->name() << (avv[q]->getSeme()=="Oro" ? " d'" : " di ") << avv[q]->getSeme() << endl;
+			if(avv[q]->getBriscola()) cout << "Ma tena accura, ittau na briscola" << endl;
+		}
+		else
+			cout << endl << "Il tuo avversario sta per lanciare " << avv[q]->name() << (avv[q]->getSeme()=="Oro" ? " d'" : " di ") << avv[q]->getSeme() << endl;
 		system("pause");
 		if(match(avv,terra,q)>0){
 			a+=match(avv,terra,q);
@@ -221,18 +250,19 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 		while(avv[q]->isLanciata()) q = rand()%3;
 		lancio(avv,terra,q);
 		vuoto = false;
+		if(avv[q]->getPunteggio()==0) cout << "Ci va di liscio" << endl;
+		else if(avv[q]->getPunteggio()>=10) cout << "Mizzica, ittau nu bellu caricu" << endl;
 		system("pause");
 		mostra(gioc,terra,vuoto,br,index,g,a);
 		cout << endl << "Ora tocca a te" << endl;
 		system("pause");
 		mostra(gioc,terra,vuoto,br,index,g,a);
-		cout << endl << "Scegli la carta da lanciare (1) (2) (3)\t";
+		cout << endl << "Scegli la carta da lanciare (1) (2) (3) --> ";
 		cin >> z;
 		while(cin.fail() || z>3 || z<1 || gioc[z-1]->isLanciata()){
-			cerr << endl << "Scrivi (1), (2) o (3)" << endl;
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << endl << "Scegli la carta da lanciare (1) (2) (3)\t";
+			cout << endl << "Scegli la carta da lanciare (1) (2) (3) --> ";
 			cin >> z;
 		}
 		z--;
