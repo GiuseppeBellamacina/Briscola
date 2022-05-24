@@ -121,7 +121,7 @@ void noCartaTerra(){
 void mostra(Carta** gioc, Carta** terra, bool vuoto, string br, int index, int g, int a){
 	system("cls");
 	cout << "Il seme di briscola e' " << br << setw(br=="Oro" ? 22 : 20) << "MAZZO" << endl;
-	cout << "___________________________" << setw(33) << "Carte rimanenti: " << 40-index << endl;
+	cout << "___________________________" << setw(33) << "Carte rimanenti: " << DIM-index << endl;
 	cout << "Queste sono le tue carte" << endl;
 	for(int i=0; i<3; i++){
 		if(gioc[i]->isLanciata()) noCartaTerra();
