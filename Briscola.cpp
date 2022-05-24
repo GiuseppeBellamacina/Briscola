@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <limits>
 #define DIM 40
+
 using namespace std;
 
 class Carta{
