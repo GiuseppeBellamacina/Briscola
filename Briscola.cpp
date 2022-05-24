@@ -43,16 +43,16 @@ ostream& operator<<(ostream& os, Carta* c){
 
 string Carta::name(){
 	switch(this->getValore()){
-		case 1: return "un asso";
+		case 1: return "un gran bell'asso";
 		case 2: return "un 2";
 		case 3: return "un 3";
 		case 4: return "un 4";
-		case 5: return "un 5";
-		case 6: return "un 6";
-		case 7: return "un 7";
-		case 8: return "una donna";
-		case 9: return "un cavallo";
-		case 10: return "un re";
+		case 5: return "un bel 5";
+		case 6: return "un bel 6";
+		case 7: return "un bel 7";
+		case 8: return "una bella donna";
+		case 9: return "un bel cavallo";
+		case 10: return "un bel re";
 	}
 }
 
@@ -121,7 +121,7 @@ void mostra(Carta** gioc, Carta** terra, bool vuoto, string br, int index, int g
 	system("cls");
 	cout << "Il seme di briscola e' " << br << setw(br=="Oro" ? 22 : 20) << "MAZZO" << endl;
 	cout << "___________________________" << setw(33) << "Carte rimanenti: " << 40-index << endl;
-	cout << "Queste sono le tue carte" << "                   Punteggio Gioc: " << g << " ||| Punteggio Avv: " << a << endl;
+	cout << "Queste sono le tue carte" << endl;
 	for(int i=0; i<3; i++){
 		if(gioc[i]->isLanciata()) noCartaTerra();
 		else cout << gioc[i];
@@ -220,11 +220,12 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 		mostra(gioc,terra,vuoto,br,index,g,a);
 		while(avv[q]->isLanciata()) q = rand()%3;
 		if(avv[q]->getPunteggio()==0){
-			cout << "Il tuo avversario ci va di liscio con " << avv[q]->name() << (avv[q]->getSeme()=="Oro" ? " d'" : " di ") << avv[q]->getSeme() << endl;
+			cout << endl << "Il tuo avversario ci va di liscio con " << avv[q]->name() << (avv[q]->getSeme()=="Oro" ? " d'" : " di ") << avv[q]->getSeme() << endl;
 			if(avv[q]->getBriscola()) cout << "Ma tena accura, ittau na briscola" << endl;
 		}
 		else
 			cout << endl << "Il tuo avversario sta per lanciare " << avv[q]->name() << (avv[q]->getSeme()=="Oro" ? " d'" : " di ") << avv[q]->getSeme() << endl;
+		avv[q]->isLanciata() = true;
 		system("pause");
 		if(match(avv,terra,q)>0){
 			a+=match(avv,terra,q);
@@ -250,10 +251,10 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 		while(avv[q]->isLanciata()) q = rand()%3;
 		lancio(avv,terra,q);
 		vuoto = false;
-		if(avv[q]->getPunteggio()==0) cout << "Ci va di liscio" << endl;
-		else if(avv[q]->getPunteggio()>=10) cout << "Mizzica, ittau nu bellu caricu" << endl;
 		system("pause");
 		mostra(gioc,terra,vuoto,br,index,g,a);
+		if(avv[q]->getPunteggio()==0) cout << endl << "Ci va di liscio" << endl;
+		else if(avv[q]->getPunteggio()>=10) cout << endl << "Mizzica, ittau nu bellu caricu" << endl;
 		cout << endl << "Ora tocca a te" << endl;
 		system("pause");
 		mostra(gioc,terra,vuoto,br,index,g,a);
@@ -266,6 +267,7 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 			cin >> z;
 		}
 		z--;
+		gioc[z]->isLanciata() = true;
 		if(match(gioc,terra,z)>0){
 			g+=match(gioc,terra,z);
 			cout << endl << "Hai preso tu" << endl;
