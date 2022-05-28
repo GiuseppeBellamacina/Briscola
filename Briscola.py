@@ -1,3 +1,5 @@
+DIM = 40
+# Classe delle carte
 class Carta:
     def __init__(self, seme, valore, punteggio, briscola, lanciata):
         self.seme = seme
@@ -6,6 +8,7 @@ class Carta:
         self.briscola = briscola
         self.lanciata = lanciata
 
+# funzione per assegnare il punteggio
 def setPunteggio(n: int) -> int:
     match n:
         case 1:
@@ -21,6 +24,7 @@ def setPunteggio(n: int) -> int:
         case 3:
             return 10
 
+# funzione per inizializzare il mazzo
 def init(list) -> None:
     a = ["Oro","Spade","Coppe","Mazze"]
     for i in range(4):
@@ -29,12 +33,23 @@ def init(list) -> None:
     print("BRISCOLA")
     print("Benvenuto, il mazziere ha preso il mazzo e lo sta mischiando")
 
+# funzione per stamapre le carte
 def print_carta(obj :Carta) -> None:
     print("_______")
-    print("|     |")
-    print("|     |")
+    if obj.seme == "Oro":
+        print("|" + obj.seme + "  |")
+    else:
+        print("|" + obj.seme + "|")
+    if obj.valore < 10:
+        print("|" + str(obj.valore) + "    |")
+    else:
+        print("|" + str(obj.valore) + "   |")
     print("|     |")
     print("|_____|")
 
-arr = []
-init(arr)
+
+# DA QUI INIZIA L'ESECUZIONE
+mazzo = []
+init(mazzo)
+for carta in mazzo:
+    print_carta(carta)
