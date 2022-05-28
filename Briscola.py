@@ -1,3 +1,7 @@
+from os import system
+from random import randint
+
+
 DIM = 40
 # Classe delle carte
 class Carta:
@@ -7,6 +11,20 @@ class Carta:
         self.punteggio = punteggio
         self.briscola = briscola
         self.lanciata = lanciata
+
+# funzione per stamapre le carte
+def print_carta(obj :Carta) -> None:
+    print("_______")
+    if obj.seme == "Oro":
+        print("|" + obj.seme + "  |")
+    else:
+        print("|" + obj.seme + "|")
+    if obj.valore < 10:
+        print("|" + str(obj.valore) + "    |")
+    else:
+        print("|" + str(obj.valore) + "   |")
+    print("|     |")
+    print("|_____|")
 
 # funzione per assegnare il punteggio
 def setPunteggio(n: int) -> int:
@@ -25,7 +43,7 @@ def setPunteggio(n: int) -> int:
             return 10
 
 # funzione per inizializzare il mazzo
-def init(list) -> None:
+def init(list: Carta) -> None:
     a = ["Oro","Spade","Coppe","Mazze"]
     for i in range(4):
         for j in range(10):
@@ -33,23 +51,21 @@ def init(list) -> None:
     print("BRISCOLA")
     print("Benvenuto, il mazziere ha preso il mazzo e lo sta mischiando")
 
-# funzione per stamapre le carte
-def print_carta(obj :Carta) -> None:
-    print("_______")
-    if obj.seme == "Oro":
-        print("|" + obj.seme + "  |")
-    else:
-        print("|" + obj.seme + "|")
-    if obj.valore < 10:
-        print("|" + str(obj.valore) + "    |")
-    else:
-        print("|" + str(obj.valore) + "   |")
-    print("|     |")
-    print("|_____|")
+# funzione per lo swap
+def swap(list: Carta, i: int) -> None:
+    pos = randint(0,DIM-1)
+    aux = list[i]
+    list[i] = list[pos]
+    list[pos] = aux
 
+# funzione per mischiare il mazzo
+def mischia(list: Carta) -> None:
+    for i in range(DIM):
+        swap(list,i)
 
 # DA QUI INIZIA L'ESECUZIONE
 mazzo = []
 init(mazzo)
+mischia(mazzo)
 for carta in mazzo:
     print_carta(carta)
