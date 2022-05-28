@@ -64,8 +64,9 @@ def mischia(list: Carta) -> None:
         swap(list,i)
 
 # DA QUI INIZIA L'ESECUZIONE
-mazzo = []
+mazzo, gioc, avv, terra = [], [], [], []
 init(mazzo)
 mischia(mazzo)
 for carta in mazzo:
     print_carta(carta)
+system("pause")
