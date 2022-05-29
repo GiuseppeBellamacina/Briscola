@@ -11,36 +11,50 @@ class Carta:
         self.punteggio = punteggio
         self.briscola = briscola
         self.lanciata = lanciata
+    def name(self):
+        match self.valore:
+            case 1: return "un gran bell'asso"
+            case 2: return "un 2"
+            case 3: return "un 3"
+            case 4: return "un 4"
+            case 5: return "un bel 5"
+            case 6: return "un bel 6"
+            case 7: return "un bel 7"
+            case 8: return "una bella donna"
+            case 9: return "un bel cavallo"
+            case 10: return "un bel re"
 
 # funzione per stamapre le carte
 def print_carta(obj :Carta) -> None:
-    print("_______")
+    print("_________")
     if obj.seme == "Oro":
+        print("|" + obj.seme + "    |")
+    else:
         print("|" + obj.seme + "  |")
-    else:
-        print("|" + obj.seme + "|")
-    if obj.valore < 10:
-        print("|" + str(obj.valore) + "    |")
-    else:
-        print("|" + str(obj.valore) + "   |")
-    print("|     |")
-    print("|_____|")
+    match obj.valore:
+        case 1:
+            print("|Asso   |")
+        case 8:
+            print("|Donna  |")
+        case 9:
+            print("|Cavallo|")
+        case 10:
+           print("|Re     |") 
+        case _:
+            print("|" + str(obj.valore) + "      |")
+    print("|       |")
+    print("|       |")
+    print("|_______|")
 
 # funzione per assegnare il punteggio
 def setPunteggio(n: int) -> int:
     match n:
-        case 1:
-            return 11
-        case 2,4,5,6,7:
-            return 0
-        case 8:
-            return 2
-        case 9:
-            return 3
-        case 10:
-            return 4
-        case 3:
-            return 10
+        case 1: return 11
+        case 2,4,5,6,7: return 0
+        case 8: return 2
+        case 9: return 3
+        case 10: return 4
+        case 3: return 10
 
 # funzione per inizializzare il mazzo
 def init(list: Carta) -> None:
@@ -64,9 +78,12 @@ def mischia(list: Carta) -> None:
         swap(list,i)
 
 # DA QUI INIZIA L'ESECUZIONE
-mazzo, gioc, avv, terra = [], [], [], []
-init(mazzo)
-mischia(mazzo)
-for carta in mazzo:
-    print_carta(carta)
-system("pause")
+def main() -> None:
+    mazzo, gioc, avv, terra = [], [], [], []
+    init(mazzo)
+    mischia(mazzo)
+    for carta in mazzo:
+        print_carta(carta)
+    system("pause")
+
+main()
