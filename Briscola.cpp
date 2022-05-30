@@ -170,6 +170,18 @@ int match(Carta** vec, Carta** terra, int i){
 	}
 }
 
+bool matchL(Carta** vec, Carta** terra, int i){
+	if(terra[0]->getBriscola()){
+		if(vec[i]->getBriscola()){
+			return terra[0]->getValore()>vec[i]->getValore() ? false : true;
+		}
+	}
+	else{
+		if(vec[i]->getBriscola()) return true;
+		else return terra[0]->getValore()>vec[i]->getValore() ? false : true;
+	}
+}
+
 void occhiata(Carta** avv){
 	system("cls");
 	cout << "Minchia mbare, belle carte..." << endl;
@@ -236,13 +248,29 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 			turno = false;
 			return true;
 		}
-		else{
+		else if(match(avv,terra,q)<0){
 			g-=match(avv,terra,q);
 			cout << endl << "Hai preso tu" << endl;
 			system("pause");
 			vuoto = true;
 			turno = true;
 			return true;
+		}
+		else{
+			if(matchL(avv,terra,q)){
+				cout << endl << "Ha preso l'avversario" << endl;
+				system("pause");
+				vuoto = true;
+				turno = false;
+				return true;
+			}
+			else{
+				cout << endl << "Hai preso tu" << endl;
+				system("pause");
+				vuoto = true;
+				turno = true;
+				return true;
+			}
 		}
 	}
 	// comincia l'avversario
@@ -277,13 +305,29 @@ bool game(Carta** gioc, Carta** avv, Carta** terra, int& g, int& a, bool& turno,
 			turno = true;
 			return true;
 		}
-		else{
+		else if(match(gioc,terra,z)<0){
 			a-=match(gioc,terra,z);
 			cout << endl << "Ha preso l'avversario" << endl;
 			system("pause");
 			vuoto = true;
 			turno = false;
 			return true;
+		}
+		else{
+			if(matchL(gioc,terra,z)){
+				cout << endl << "Hai preso tu" << endl;
+				system("pause");
+				vuoto = true;
+				turno = true;
+				return true;
+			}
+			else{
+				cout << endl << "Ha preso l'avversario" << endl;
+				system("pause");
+				vuoto = true;
+				turno = false;
+				return true;
+			}
 		}
 	}
 }
