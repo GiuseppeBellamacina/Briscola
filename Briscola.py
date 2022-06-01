@@ -1,8 +1,17 @@
 from os import system
 from random import randint
 
+# variable definitions area:
+# arrays
+deck, player, opponent, ground = [], [], [], []
+# int
+index, player_points, opponent_points, ind1, ind2 = 0, 0, 0, 0, 0
+# booleans
+turn, no_ground, game = True, True, True
 
+# constant value
 DIM = 40
+
 # class: it is the class which defines a card
 class Card:
     # constructor
@@ -77,13 +86,12 @@ def swap(list: Card, i: int) -> None:
 # function: mix the deck
 def mix(list: Card) -> None:
     for i in range(DIM): swap(list,i)
-
+    
 # function: gives the three first cards to each player
-def distribute(deck: Card, list: Card, local_index: int) -> None:
-    for i in range(3): list.append(deck[i+local_index])
-    local_index += 3
+def distribute(deck: Card, list: Card) -> None:
     global index
-    index = local_index
+    for i in range(3): list.append(deck[i+index])
+    index += 3
 
 # function: set the briscola status
 def setBriscola(list: Card) -> str:
@@ -105,10 +113,10 @@ def no_card() -> None:
     print("|_______|")
 
 # function: shows the playground
-def show(pl: Card, gr: Card, noc: bool, br: str, index: int) -> None:
+def show(pl: Card, gr: Card, noc: bool, br: str) -> None:
     system("cls")
-    print("Il seme di briscola e' " + br + "          MAZZO")
-    print("___________________________" + "          Carte rimanenti: " + str(DIM-index))
+    print("Il seme di briscola e' " + br + ("            MAZZO" if br == "Oro" else "          MAZZO"))
+    print("___________________________" + "           Carte rimanenti: " + str(DIM-index))
     print("Queste sono le tue carte")
     for i in range(3):
         if(pl[i].launched): no_card()
@@ -123,23 +131,63 @@ def launch(orig: Card, dest: Card, i: int):
     dest[0] = orig[i]
     orig[i].launched = True
 
-#function: initializes the game
-def initGame(deck: Card, pl: Card, op: Card, gr: Card) -> str:
+# function: initializes the game
+def initGame(deck: Card, pl: Card, op: Card) -> str:
     init(deck)
     mix(deck)
-    distribute(deck,pl,index)
-    distribute(deck,op,index)
+    distribute(deck,pl)
+    distribute(deck,op)
     br = setBriscola(deck)
     return br
 
+# function: draws a card from the deck
+def draw(deck: Card, list: Card, n: int) -> None:
+    list[n] = deck[index]
+    index += 1
+
+# function: choose who win a match
+def match(list: Card, ground: Card, i: int) -> int:
+    ret = list[i].points + ground[0].points
+    if(ground[0].briscola):
+        if(list[i].briscola):
+            return (ret if list[i].points > ground[0].points else -ret)
+        else: return -ret
+    else:
+        if(list[i].briscola): return ret
+        else:
+            if(list[i].seed == ground[0].seed):
+                return (ret if list[i].points > ground[0].points else -ret)   
+            else: return -ret
+
+# function: choose who win a match with "liscie" cards
+def matchL(list: Card, ground: Card, i: int) -> bool:
+    if(ground[0].briscola):
+        if(list[i].briscola):
+            return (True if list[0].value > ground[i].value else False)
+    else:
+        if(list[i].briscola): return True
+        else: return (True if list[0].value > ground[i].value else False)
+
+# function: it's not really a legitimate thing
+def occhiata(opp: Card):
+    system("cls")
+    print("Minchia mbare, belle carte...")
+    print("___________________________")
+    print("Queste NON sono le tue carte")
+    for i in range(3):
+        if(opp[i].launched): no_card()
+        else: print_card(opp[i])
+    print('\n')
+    system("pause")
+
+# function: this is the most important function of the program
+def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
+    return True # to complete
+
 # main function: here starts the execution
-# arrays
-deck, player, opponent, ground = [], [], [], []
-# int
-index, player_points, opponent_points, ind1, ind2 = 0, 0, 0, 0, 0
-# booleans
-turn, no_ground, game = True, True, True
-    
-br = initGame(deck,player,opponent,ground)
-show(player,ground,no_ground,br,index)
-system("pause")
+def main() -> None:    
+    br = initGame(deck,player,opponent)
+    show(player,ground,no_ground,br)
+    system("pause")
+
+if __name__ == "__main__": main()
