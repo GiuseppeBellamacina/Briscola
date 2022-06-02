@@ -3,7 +3,7 @@ from random import randint
 
 # variable definitions area:
 # arrays
-deck, player, opponent, ground = [], [], [], []
+deck, player, opponent, ground = [], [], [], [0]
 # int
 index, player_points, opponent_points, ind1, ind2 = 0, 0, 0, 0, 0
 # booleans
@@ -15,7 +15,7 @@ DIM = 40
 # class: it is the class which defines a card
 class Card:
     # constructor
-    def __init__(self, seed, value, points, briscola, launched):
+    def __init__(self, seed: str, value: int, points: int, briscola: bool, launched: bool):
         self.seed = seed
         self.value = value
         self.points = points
@@ -142,31 +142,34 @@ def initGame(deck: Card, pl: Card, op: Card) -> str:
 
 # function: draws a card from the deck
 def draw(deck: Card, list: Card, n: int) -> None:
+    global index
     list[n] = deck[index]
     index += 1
 
 # function: choose who win a match
 def match(list: Card, ground: Card, i: int) -> int:
-    ret = list[i].points + ground[0].points
+    first = list[i].points if list[i].points is not None else 0
+    second = ground[0].points if ground[0].points is not None else 0
+    ret = first + second
     if(ground[0].briscola):
         if(list[i].briscola):
-            return (ret if list[i].points > ground[0].points else -ret)
+            return (ret if first > second else -ret)
         else: return -ret
     else:
         if(list[i].briscola): return ret
         else:
             if(list[i].seed == ground[0].seed):
-                return (ret if list[i].points > ground[0].points else -ret)   
+                return (ret if first > second else -ret)   
             else: return -ret
 
 # function: choose who win a match with "liscie" cards
 def matchL(list: Card, ground: Card, i: int) -> bool:
     if(ground[0].briscola):
         if(list[i].briscola):
-            return (True if list[0].value > ground[i].value else False)
+            return (True if list[i].value > ground[0].value else False)
     else:
         if(list[i].briscola): return True
-        else: return (True if list[0].value > ground[i].value else False)
+        else: return (True if list[i].value > ground[0].value else False)
 
 # function: it's not really a legitimate thing
 def occhiata(opp: Card):
@@ -182,12 +185,126 @@ def occhiata(opp: Card):
 
 # function: this is the most important function of the program
 def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
-    return True # to complete
+    global ind1, ind2, no_ground, turn, player_points, opponent_points
+    show(pl,gr,no_ground,br)
+    if(turn):
+        ind1 = int(input("\nScegli la carta da lanciare (1) (2) (3) --> "))
+        if(ind1 == 1234):
+            occhiata(op)
+            show(pl,gr,no_ground,br)
+        while((ind1 is str) or ind1>3 or ind1<1 or pl[ind1-1].launched):
+            ind1 = int(input("Scegli la carta da lanciare (1) (2) (3) --> "))
+        ind1 -= 1
+        launch(pl,gr,ind1)
+        no_ground = False
+        show(pl,gr,no_ground,br)
+        print("\nOra tocca all'avversario")
+        system("pause")
+        show(pl,gr,no_ground,br)
+        ind2 = randint(0,2)
+        while(op[ind2].launched): ind2 = randint(0,2)
+        if(op[ind2].points == 0):
+            print("\nIl tuo avversario ci va di liscio con " + op[ind2].name() + (" d'" if op[ind2].seed == "Oro" else " di ") + op[ind2].seed)
+            if(op[ind2].briscola): print("Ma fai attenzione, ha lanciato una briscola")
+        else:
+            print("\nIl tuo avversario sta per lanciare " + op[ind2].name() + (" d'" if op[ind2].seed == "Oro" else " di ") + op[ind2].seed)
+        op[ind2].launched = True
+        system("pause")
+        pt = match(op,gr,ind2)
+        if(pt > 0):
+            opponent_points += pt
+            print("\nHa preso l'avversario")
+            system("pause")
+            no_ground = True
+            turn = False
+            return True
+        elif(pt < 0):
+            player_points -= pt
+            print("\nHai preso tu")
+            system("pause")
+            no_ground = True
+            turn = True
+            return True
+        else:
+            if(matchL(op,gr,ind2)):
+                print("\nHa preso l'avversario")
+                system("pause")
+                no_ground = True
+                turn = False
+                return True
+            else:
+                print("\nHai preso tu")
+                system("pause")
+                no_ground = True
+                turn = True
+                return True
+    else:
+        print("\nTocca all'avversario")
+        ind2 = randint(0,2)
+        while(op[ind2].launched): ind2 = randint(0,2)
+        launch(op,gr,ind2)
+        no_ground = False
+        system("pause")
+        show(pl,gr,no_ground,br)
+        if(op[ind2].points == 0): print("\nCi va di liscio")
+        elif(op[ind2].points >= 10): print("\nIl tuo avversario ha buttato un bel carico")
+        print("Ora tocca a te")
+        system("pause")
+        show(pl,gr,no_ground,br)
+        ind1 = int(input("\nScegli la carta da lanciare (1) (2) (3) --> "))
+        while((ind1 is str) or ind1>3 or ind1<1 or pl[ind1-1].launched):
+            ind1 = int(input("Scegli la carta da lanciare (1) (2) (3) --> "))
+        ind1 -= 1
+        pl[ind1].launched = True
+        pt = match(pl,gr,ind1)
+        if(pt > 0):
+            player_points += pt
+            print("\nHai preso tu")
+            system("pause")
+            no_ground = True
+            turn = True
+            return True
+        elif(pt < 0):
+            opponent_points -= pt
+            print("\nHa preso l'avversario")
+            system("pause")
+            no_ground = True
+            turn = False
+            return True
+        else:
+            if(matchL(pl,gr,ind1)):
+                print("\nHai preso tu")
+                system("pause")
+                no_ground = True
+                turn = True
+                return True
+            else:
+                print("\nHa preso l'avversario")
+                system("pause")
+                no_ground = True
+                turn = False
+                return True            
 
 # main function: here starts the execution
-def main() -> None:    
+def main() -> None:
+    global game,no_ground 
     br = initGame(deck,player,opponent)
+    while(game):
+        game = engine(player,opponent,ground,br)
+        draw(deck,player,ind1)
+        draw(deck,opponent,ind2)
+        if(index > 39):
+            print("\nATTENZIONE: e' appena finito il mazzo, giocatela bene ora")
+            system("pause")
+            game = False
+    for i in range(3): engine(player,opponent,ground,br)
     show(player,ground,no_ground,br)
+    print("\nLa partita e' giunta alla fine, ed il vincitore e'...")
     system("pause")
+    if(player_points == opponent_points): print("Wow, non me l'aspettavo, questo e' un bel pareggio")
+    else:
+        print("TU!!! Grandissimo, hai vinto con un bel punteggio di " if player_points > opponent_points else "Ehm, non sei tu, mi spiace ma hai perso, il tuo avversario ha totalizato un punteggio di ")
+        print((str(player_points) if player_points > opponent_points else str(opponent_points)) + " punti")
+    system("pause");
 
 if __name__ == "__main__": main()
