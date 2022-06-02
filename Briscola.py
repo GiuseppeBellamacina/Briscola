@@ -204,7 +204,7 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
         show(pl,gr,no_ground,br)
         ind2 = randint(0,2)
         while(op[ind2].launched): ind2 = randint(0,2)
-        if(op[ind2].points == 0):
+        if(op[ind2].points is None):
             print("\nIl tuo avversario ci va di liscio con " + op[ind2].name() + (" d'" if op[ind2].seed == "Oro" else " di ") + op[ind2].seed)
             if(op[ind2].briscola): print("Ma fai attenzione, ha lanciato una briscola")
         else:
