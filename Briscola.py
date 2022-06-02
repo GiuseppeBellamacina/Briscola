@@ -188,12 +188,13 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
     global ind1, ind2, no_ground, turn, player_points, opponent_points
     show(pl,gr,no_ground,br)
     if(turn):
-        ind1 = int(input("\nScegli la carta da lanciare (1) (2) (3) --> "))
-        if(ind1 == 1234):
-            occhiata(op)
-            show(pl,gr,no_ground,br)
-        while((ind1 is str) or ind1>3 or ind1<1 or pl[ind1-1].launched):
-            ind1 = int(input("Scegli la carta da lanciare (1) (2) (3) --> "))
+        ind1 = input("\nScegli la carta da lanciare (1) (2) (3) --> ")
+        while(str(ind1) == '' or not str(ind1).isdigit() or int(ind1)>3 or int(ind1)<1 or pl[int(ind1)-1].launched):
+            if(str(ind1).isdigit() and int(ind1) == 1234):
+                occhiata(op)
+                show(pl,gr,no_ground,br)
+            ind1 = input("\nScegli la carta da lanciare (1) (2) (3) --> ")
+        ind1 = int(ind1)
         ind1 -= 1
         launch(pl,gr,ind1)
         no_ground = False
@@ -246,14 +247,15 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
         no_ground = False
         system("pause")
         show(pl,gr,no_ground,br)
-        if(op[ind2].points == 0): print("\nCi va di liscio")
+        if(op[ind2].points is None): print("\nCi va di liscio")
         elif(op[ind2].points >= 10): print("\nIl tuo avversario ha buttato un bel carico")
-        print("Ora tocca a te")
+        print("\nOra tocca a te")
         system("pause")
         show(pl,gr,no_ground,br)
-        ind1 = int(input("\nScegli la carta da lanciare (1) (2) (3) --> "))
-        while((ind1 is str) or ind1>3 or ind1<1 or pl[ind1-1].launched):
-            ind1 = int(input("Scegli la carta da lanciare (1) (2) (3) --> "))
+        ind1 = input("\nScegli la carta da lanciare (1) (2) (3) --> ")
+        while(str(ind1) == '' or not str(ind1).isdigit() or int(ind1)>3 or int(ind1)<1 or pl[int(ind1)-1].launched):
+            ind1 = input("\nScegli la carta da lanciare (1) (2) (3) --> ")
+        ind1 = int(ind1)
         ind1 -= 1
         pl[ind1].launched = True
         pt = match(pl,gr,ind1)
@@ -303,7 +305,7 @@ def main() -> None:
     system("pause")
     if(player_points == opponent_points): print("Wow, non me l'aspettavo, questo e' un bel pareggio")
     else:
-        print("TU!!! Grandissimo, hai vinto con un bel punteggio di " if player_points > opponent_points else "Ehm, non sei tu, mi spiace ma hai perso, il tuo avversario ha totalizato un punteggio di ")
+        print("TU!!! Grandissimo, hai vinto con un bel punteggio di " if player_points > opponent_points else "Ehm, non sei tu, mi spiace ma hai perso, il tuo avversario ha totalizato un punteggio di:", end = "\n\n")
         print((str(player_points) if player_points > opponent_points else str(opponent_points)) + " punti")
     system("pause");
 
