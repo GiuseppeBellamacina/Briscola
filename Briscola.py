@@ -296,7 +296,8 @@ def main() -> None:
         draw(deck,player,ind1)
         draw(deck,opponent,ind2)
         if(index > 39):
-            print("\nATTENZIONE: e' appena finito il mazzo, giocatela bene ora")
+            show(player,ground,no_ground,br)
+            print("\n!!! ATTENZIONE !!!\n Il mazzo e' appena finito, giocatela bene ora")
             system("pause")
             game = False
     for i in range(3): engine(player,opponent,ground,br)
@@ -305,8 +306,8 @@ def main() -> None:
     system("pause")
     if(player_points == opponent_points): print("Wow, non me l'aspettavo, questo e' un bel pareggio")
     else:
-        print("TU!!! Grandissimo, hai vinto con un bel punteggio di " if player_points > opponent_points else "Ehm, non sei tu, mi spiace ma hai perso, il tuo avversario ha totalizato un punteggio di:", end = "\n\n")
-        print((str(player_points) if player_points > opponent_points else str(opponent_points)) + " punti")
+        print("TU!!! Grandissimo, hai vinto con un bel punteggio di: " if player_points > opponent_points else "Ehm, non sei tu, mi spiace ma hai perso, il tuo avversario ha totalizato un punteggio di:", end = "\n\n")
+        print("--> " + (str(player_points) if player_points > opponent_points else str(opponent_points)) + " <-- " + " punti")
     system("pause");
 
 if __name__ == "__main__": main()
