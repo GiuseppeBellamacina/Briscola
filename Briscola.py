@@ -297,7 +297,7 @@ def main() -> None:
         draw(deck,opponent,ind2)
         if(index > 39):
             show(player,ground,no_ground,br)
-            print("\n!!! ATTENZIONE !!!\n Il mazzo e' appena finito, giocatela bene ora")
+            print("\n!!! ATTENZIONE !!!\nIl mazzo e' appena finito, giocatela bene ora")
             system("pause")
             game = False
     for i in range(3): engine(player,opponent,ground,br)
