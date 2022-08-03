@@ -18,7 +18,7 @@ def download_ascii():
         text_response = "Aggiungi una parola o una frase al campo input!"
 
     textwidget = Text()
-    textwidget.insert(END, text_response)
+    #textwidget.insert(END, text_response)
     textwidget.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
 
     credits_label = Label(window, text="ascii art by artii.herokuapp.com")
