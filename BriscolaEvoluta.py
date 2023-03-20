@@ -1,6 +1,8 @@
 from os import system
 from random import randint
-import pyfiglet
+#from pyfiglet import figlet_format #sistema sta roba
+from termcolor import colored
+import colorama
 
 # variable definitions area:
 # arrays
@@ -25,33 +27,33 @@ class Card:
     # function: gives to each card a name
     def name(self) -> str:
         match self.value:
-            case 1: return "un gran bell'asso"
+            case 1: return "un gran bell'\33[1masso\33[0m"
             case 2: return "un 2"
             case 3: return "un 3"
             case 4: return "un 4"
             case 5: return "un bel 5"
             case 6: return "un bel 6"
             case 7: return "un bel 7"
-            case 8: return "una bella donna"
-            case 9: return "un bel cavallo"
-            case 10: return "un bel re"
+            case 8: return "una bella \33[1mdonna\33[0m"
+            case 9: return "un bel \33[1mcavallo\33[0m"
+            case 10: return "un bel \33[1mre\33[0m"
 
 # function: defines the way to print the cards
 def print_card(obj :Card) -> None:
     print("_________")
-    if obj.seed == "Oro":
+    if obj.seed == "\33[1;33mOro\33[0m":
         print("|" + obj.seed + "    |")
     else:
         print("|" + obj.seed + "  |")
     match obj.value:
         case 1:
-            print("|Asso   |")
+            print("|\33[1mAsso\33[0m   |")
         case 8:
-            print("|Donna  |")
+            print("|\33[1mDonna\33[0m  |")
         case 9:
-            print("|Cavallo|")
+            print("|\33[1mCavallo\33[0m|")
         case 10:
-           print("|Re     |") 
+           print("|\33[1mRe\33[0m     |") 
         case _:
             print("|" + str(obj.value) + "      |")
     print("|       |")
@@ -68,15 +70,20 @@ def setPoints(n: int) -> int:
         case 10: return 4
         case 3: return 10
 
+#ASCII art
+def ascii_art() -> None:
+    colors = ["red","yellow","green","cyan","blue","magenta"]
+    str = "Briscola Evoluta\n\n"
+    for i in range(len(str)):
+        print(colored(str[i], colors[i%len(colors)], 'on_black', ['bold', 'blink']), end='')
+
 # function: initializes the deck
 def init(list: Card) -> None:
-    a = ["Oro","Spade","Coppe","Mazze"]
+    a = ["\33[1;33mOro\33[0m","\33[1;34mSpade\33[0m","\33[1;31mCoppe\33[0m","\33[1;32mMazze\33[0m"]
     for i in range(4):
         for j in range(10):
             list.append(Card(a[i],j+1,setPoints(j+1),False,False))
-    ASCII_ART = pyfiglet.figlet_format("Briscola", font="slant")
-    #print(ASCII_ART)
-    print("BRISCOLA")
+    ascii_art()
     print("Benvenuto, il mazziere ha preso il mazzo e lo sta mischiando")
 
 # function: swap two cards position
@@ -118,7 +125,7 @@ def no_card() -> None:
 # function: shows the playground
 def show(pl: Card, gr: Card, noc: bool, br: str) -> None:
     system("cls")
-    print("Il seme di briscola e' " + br + ("            MAZZO" if br == "Oro" else "          MAZZO"))
+    print("Il seme di briscola e' " + br + ("            MAZZO" if br == "\33[1;33mOro\33[0m" else "          MAZZO"))
     print("___________________________" + "           Carte rimanenti: " + str(DIM-index))
     print("Queste sono le tue carte")
     for i in range(3):
@@ -208,10 +215,10 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
         ind2 = randint(0,2)
         while(op[ind2].launched): ind2 = randint(0,2)
         if(op[ind2].points is None):
-            print("\nIl tuo avversario ci va di liscio con " + op[ind2].name() + (" d'" if op[ind2].seed == "Oro" else " di ") + op[ind2].seed)
-            if(op[ind2].briscola): print("Ma fai attenzione, ha lanciato una briscola")
+            print("\nIl tuo avversario ci va di \33[1mliscio\33[0m con " + op[ind2].name() + (" d'" if op[ind2].seed == "\33[1;33mOro\33[0m" else " di ") + op[ind2].seed)
+            if(op[ind2].briscola): print("Ma fai attenzione, ha lanciato una \33[1mbriscola\33[0m")
         else:
-            print("\nIl tuo avversario sta per lanciare " + op[ind2].name() + (" d'" if op[ind2].seed == "Oro" else " di ") + op[ind2].seed)
+            print("\nIl tuo avversario sta per lanciare " + op[ind2].name() + (" d'" if op[ind2].seed == "\33[1;33mOro\33[0m" else " di ") + op[ind2].seed)
         op[ind2].launched = True
         system("pause")
         pt = match(op,gr,ind2)
@@ -250,8 +257,8 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
         no_ground = False
         system("pause")
         show(pl,gr,no_ground,br)
-        if(op[ind2].points is None): print("\nCi va di liscio")
-        elif(op[ind2].points >= 10): print("\nIl tuo avversario ha buttato un bel carico")
+        if(op[ind2].points is None): print("\nCi va di \33[1mliscio\33[0m")
+        elif(op[ind2].points >= 10): print("\nIl tuo avversario ha buttato un bel \33[1mcarico\33[0m")
         print("\nOra tocca a te")
         system("pause")
         show(pl,gr,no_ground,br)
@@ -293,6 +300,7 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
 # main function: here starts the execution
 def main() -> None:
     global game,no_ground 
+    colorama.init()
     br = initGame(deck,player,opponent)
     while(game):
         game = engine(player,opponent,ground,br)
@@ -300,7 +308,7 @@ def main() -> None:
         draw(deck,opponent,ind2)
         if(index > 39):
             show(player,ground,no_ground,br)
-            print("\n!!! ATTENZIONE !!!\nIl mazzo e' appena finito, giocatela bene ora")
+            print("\n\33[1;31m!!! ATTENZIONE !!!\33[0m\nIl mazzo e' appena finito, giocatela bene ora")
             system("pause")
             game = False
     for i in range(3): engine(player,opponent,ground,br)
