@@ -323,7 +323,9 @@ def main() -> None:
     if(player_points == opponent_points): print("Wow, non me l'aspettavo, questo e' un bel pareggio")
     else:
         arcobaleno("TU!!! Grandissimo, hai vinto con un bel punteggio di: ") if player_points > opponent_points else print("Ehm, non sei tu, mi spiace ma hai perso, il tuo avversario ha totalizato un punteggio di:")
-        print("--> " + (arcobaleno(str(player_points)) if player_points > opponent_points else str(opponent_points)) + " <-- " + " punti")
+        print("--> ", end='')
+        arcobaleno(str(player_points)) if player_points > opponent_points else print(str(opponent_points), end='')
+        print(" <-- " + " punti")
     system("pause");
 
 if __name__ == "__main__": main()
