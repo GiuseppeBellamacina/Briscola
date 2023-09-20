@@ -1,10 +1,12 @@
+# by Bellamacina Arts
+
+# install with lib.bat (Windows)
 from os import system
 from random import randint
 from pyfiglet import figlet_format
 from termcolor import colored
 import colorama
 
-# variable definitions area:
 # arrays
 deck, player, opponent, ground = [], [], [], [0]
 # int
@@ -69,11 +71,17 @@ def setPoints(n: int) -> int:
         case 9: return 3
         case 10: return 4
         case 3: return 10
+        
+#arcobalenizza le robe
+def arcobaleno(str: str) -> None:
+    colors = ["red","yellow","green","cyan","blue","magenta"]
+    for i in range(len(str)):
+        print(colored(str[i], colors[i%len(colors)], 'on_black', ['bold', 'blink']), end='')
 
 #ASCII art
 def ascii_art() -> None:
     colors = ["red","yellow","green","cyan","blue","magenta"]
-    str = "BRISCOLA\nLGBT Edition\n\n"
+    str = "BRISCOLA\nLGBT Edition\n"
     print(colored(figlet_format(str, font="slant"), colors[randint(0,5)], 'on_black', ['bold', 'blink']), end='')
 
 # function: initializes the deck
@@ -83,6 +91,7 @@ def init(list: Card) -> None:
         for j in range(10):
             list.append(Card(a[i],j+1,setPoints(j+1),False,False))
     ascii_art()
+    arcobaleno("by Bellamacina Arts\n\n")
     print("Benvenuto, il mazziere ha preso il mazzo e lo sta mischiando")
 
 # function: swap two cards position
@@ -298,12 +307,6 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
                 turn = False
                 return True            
 
-#arcobalenizza le robe
-def arcobaleno(str: str) -> None:
-    colors = ["red","yellow","green","cyan","blue","magenta"]
-    for i in range(len(str)):
-        print(colored(str[i], colors[i%len(colors)], 'on_black', ['bold', 'blink']), end='')
-
 # main function: here starts the execution
 def main() -> None:
     global game,no_ground 
@@ -331,3 +334,7 @@ def main() -> None:
     system("pause");
 
 if __name__ == "__main__": main()
+
+# se non funziona qualcosa, cazzi vostri
+# oppure siete su Linux
+# in quel caso cambia le robe con os
