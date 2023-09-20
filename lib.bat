@@ -1,6 +1,31 @@
 @echo off
-echo Installing necessary Python libraries...
-python -m pip install --upgrade pip
-python -m pip install os random pyfiglet termcolor colorama
-echo Libraries have been installed.
+REM Controllo se python e pip sono installati
+where python >nul 2>nul
+if %errorlevel% neq 0 (
+    echo Python non trovato! Assicurati di avere Python installato e nel tuo PATH.
+    exit /b
+)
+
+where pip >nul 2>nul
+if %errorlevel% neq 0 (
+    echo Pip non trovato! Assicurati di avere pip installato e nel tuo PATH.
+    exit /b
+)
+
+REM Aggiorno pip alla versione piu recente
+echo Aggiornamento pip...
+pip install --upgrade pip
+
+REM Installo le librerie
+echo Installazione pyfiglet...
+pip install pyfiglet
+
+echo Installazione colorama...
+pip install colorama
+
+echo Installazione termcolor...
+pip install termcolor
+
+echo.
+echo Tutte le librerie sono state installate con successo!
 pause
