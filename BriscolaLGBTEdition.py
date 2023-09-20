@@ -202,6 +202,7 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
             if(str(ind1).isdigit() and int(ind1) == 1234):
                 occhiata(op)
                 show(pl,gr,no_ground,br)
+            show(pl,gr,no_ground,br)
             ind1 = input("\nScegli la carta da lanciare (1) (2) (3) --> ")
         ind1 = int(ind1)
         ind1 -= 1
@@ -263,6 +264,7 @@ def engine(pl: Card, op: Card, gr: Card, br: str) -> bool:
         show(pl,gr,no_ground,br)
         ind1 = input("\nScegli la carta da lanciare (1) (2) (3) --> ")
         while(str(ind1) == '' or not str(ind1).isdigit() or int(ind1)>3 or int(ind1)<1 or pl[int(ind1)-1].launched):
+            show(pl,gr,no_ground,br)
             ind1 = input("\nScegli la carta da lanciare (1) (2) (3) --> ")
         ind1 = int(ind1)
         ind1 -= 1
